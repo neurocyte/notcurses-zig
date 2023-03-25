@@ -1,0 +1,23 @@
+.{
+    .name = "notcurses",
+    .version = "3.0.9",
+
+    .dependencies = .{
+        .gpm = .{
+            .url = "https://github.com/neurocyte/gpm-zig/archive/944f86b940aeba05bf7ed7c4f81579a5c3711f58.tar.gz",
+            .hash = "1220794fb9aea273b8ccc6c7157b1ee1f1ec8575bfa9d337486e1066665883f6ab42",
+        },
+        .libdeflate = .{
+            .url = "https://github.com/neurocyte/libdeflate-zig/archive/6034013a7da2b4f51ec577a6f0eb363aa942e9aa.tar.gz",
+            .hash = "12208e31ad31269475db9ba62d6f5df918b172ab067c093951893fdcab6b85b352e0",
+        },
+        .libunistring = .{
+            .url = "https://github.com/neurocyte/libunistring-zig/archive/8ec0dd6422531f381e8c66e2b249ade704696ceb.tar.gz",
+            .hash = "12208195ef3bcb92dc7de8a349c6050593904954e7e1d880def7fc769d61c2bfa8be",
+        },
+        .ncurses = .{
+            .url = "https://github.com/neurocyte/ncurses-zig/archive/762d82a348226d00c005709ea39a0575cd794252.tar.gz",
+            .hash = "12207eaeb98e518a84eb2165828b5c8758f06acbc38b88d1504b4897032dfe47c64e",
+        },
+    },
+}

@@ -16,3 +16,5 @@ rust/Cargo.lock
 *.so
 *.swp
 *.swo
+/zig-out/
+/zig-cache/
