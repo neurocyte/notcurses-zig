@@ -21,6 +21,7 @@ const cppflags = [_][]const u8{
     "-ffunction-sections",
     "-fno-rtti",
     "-std=c++20",
+    "-fno-sanitize=undefined",
 };
 
 pub fn build(b: *std.build.Builder) void {
@@ -80,7 +81,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.addCSourceFile("src/media/shim.c", &cflags);
     lib.addCSourceFile("src/media/none.c", &cflags);
 
-    lib.install();
+    b.installArtifact(lib);
     lib.installConfigHeader(version_header, .{});
     lib.installHeadersDirectory("include/notcurses", "notcurses");
 
@@ -96,7 +97,7 @@ pub fn build(b: *std.build.Builder) void {
 
     addCSourceDir(libcpp, b, libcpp_src_path, &cppflags);
 
-    libcpp.install();
+    b.installArtifact(libcpp);
     libcpp.installHeadersDirectory("include/ncpp", "ncpp");
 
     const info_exe = b.addExecutable(.{
@@ -115,7 +116,26 @@ pub fn build(b: *std.build.Builder) void {
     info_exe.addConfigHeader(builddef_header);
     info_exe.addIncludePath("include");
     info_exe.addIncludePath("src");
-    info_exe.install();
+    b.installArtifact(info_exe);
+
+    const input_exe = b.addExecutable(.{
+        .name = "notcurses-input",
+        .target = target,
+        .optimize = optimize,
+    });
+    input_exe.linkLibCpp();
+    input_exe.linkLibrary(lib);
+    input_exe.linkLibrary(libcpp);
+    input_exe.linkLibrary(gpm_dep.artifact("gpm"));
+    input_exe.linkLibrary(libdeflate_dep.artifact("deflate"));
+    input_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
+    input_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
+    input_exe.addCSourceFile("src/input/input.cpp", &cppflags);
+    input_exe.addConfigHeader(version_header);
+    input_exe.addConfigHeader(builddef_header);
+    input_exe.addIncludePath("include");
+    input_exe.addIncludePath("src");
+    b.installArtifact(input_exe);
 }
 
 fn addCSourceDir(self: *std.build.CompileStep, b: *std.build.Builder, dir_path: []const u8, flags: []const []const u8) void {
