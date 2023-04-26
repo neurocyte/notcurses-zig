@@ -12,8 +12,8 @@
             .hash = "1220c597aadc0cd82d2b69d2ea2f29c0e46fab65ab91751b6dfa6af96c3663a37882",
         },
         .libunistring = .{
-            .url = "https://github.com/neurocyte/libunistring-zig/archive/1060a209eb9f57480c335bc7762407de518712fa.tar.gz",
-            .hash = "12205f5f30f4f1453a53b9682a4b673e6b8190dbe5f3457fbed772dedc55a858666e",
+            .url = "https://github.com/neurocyte/libunistring-zig/archive/04a6788431cf0adc2b1358554251f835dd62f485.tar.gz",
+            .hash = "12204ea04f14417f36a55302526da566dfcbdac08d8a61e569ee0211b09808e353b8",
         },
         .ncurses = .{
             .url = "https://github.com/neurocyte/ncurses-zig/archive/28ed5c804b4c1f37b10de4966a6f082c513d8aa3.tar.gz",
