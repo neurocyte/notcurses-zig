@@ -8,15 +8,31 @@ const src_path = package_dir() ++ P ++ "src";
 const lib_src_path = src_path ++ P ++ "lib";
 const libcpp_src_path = src_path ++ P ++ "libcpp";
 const compat_src_path = src_path ++ P ++ "compat";
+const data_path = package_dir() ++ P ++ "data";
 
 const cflags = [_][]const u8{
-    "-DPUBLIC", "-D_XOPEN_SOURCE=700", "-DPRIVATE", "-D_GNU_SOURCE", "-D_DEFAULT_SOURCE",
+    "-DPUBLIC",
+    "-D_XOPEN_SOURCE=700",
+    "-DPRIVATE",
+    "-D_GNU_SOURCE",
+    "-D_DEFAULT_SOURCE",
+    "-Wall",
+    "-Wno-deprecated-pragma",
+    "-Wno-deprecated-declarations",
+    "-Wno-bitwise-instead-of-logical",
+    "-Wno-unused-but-set-variable",
+    "-Werror",
+    "-fno-sanitize=undefined",
 };
 
 const cppflags = [_][]const u8{
     "-Wnull-dereference",
     "-Wunused",
     "-Wno-c99-extensions",
+    "-Wall",
+    "-Wno-deprecated-pragma",
+    "-Wno-bitwise-instead-of-logical",
+    "-Werror",
     "-fno-strict-aliasing",
     "-ffunction-sections",
     "-fno-rtti",
@@ -25,6 +41,7 @@ const cppflags = [_][]const u8{
 };
 
 pub fn build(b: *std.build.Builder) void {
+    const enable_ffmpeg = b.option(bool, "enable_ffmpeg", "Enable ffmpeg for media decoding") orelse false;
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
@@ -32,6 +49,7 @@ pub fn build(b: *std.build.Builder) void {
     const libdeflate_dep = b.dependency("libdeflate", .{ .target = target, .optimize = optimize });
     const ncurses_dep = b.dependency("ncurses", .{ .target = target, .optimize = optimize });
     const libunistring_dep = b.dependency("libunistring", .{ .target = target, .optimize = optimize });
+    const ffmpeg_dep = b.dependency("ffmpeg", .{ .target = target, .optimize = optimize });
 
     const lib = b.addStaticLibrary(.{
         .name = "notcurses",
@@ -43,6 +61,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.linkLibrary(libdeflate_dep.artifact("deflate"));
     lib.linkLibrary(ncurses_dep.artifact("ncurses"));
     lib.linkLibrary(libunistring_dep.artifact("libunistring"));
+    if (enable_ffmpeg) lib.linkLibrary(ffmpeg_dep.artifact("ffmpeg"));
 
     const version_header = b.addConfigHeader(.{
         .style = .blank,
@@ -60,7 +79,7 @@ pub fn build(b: *std.build.Builder) void {
     lib.addConfigHeader(version_header);
 
     const builddef_header = b.addConfigHeader(.{
-        .style = .{ .cmake = .{ .path = "tools/builddef.h.in" } },
+        .style = .blank,
         .include_path = "builddef.h",
     }, .{
         .DFSG_BUILD = null,
@@ -68,8 +87,10 @@ pub fn build(b: *std.build.Builder) void {
         .USE_DEFLATE = 1,
         .USE_GPM = 1,
         .USE_QRCODEGEN = null,
-        .USE_FFMPEG = null,
+        .USE_FFMPEG = if (enable_ffmpeg) @as(u32, 1) else null,
         .USE_OIIO = null,
+        .NOTCURSES_USE_MULTIMEDIA = if (enable_ffmpeg) @as(u32, 1) else null,
+        .NOTCURSES_SHARE = data_path,
     });
     lib.addConfigHeader(builddef_header);
 
@@ -79,6 +100,7 @@ pub fn build(b: *std.build.Builder) void {
     addCSourceDir(lib, b, lib_src_path, &cflags);
     addCSourceDir(lib, b, compat_src_path, &cflags);
     lib.addCSourceFile("src/media/shim.c", &cflags);
+    if (enable_ffmpeg) lib.addCSourceFile("src/media/ffmpeg.c", &cflags);
     lib.addCSourceFile("src/media/none.c", &cflags);
 
     b.installArtifact(lib);
@@ -136,6 +158,44 @@ pub fn build(b: *std.build.Builder) void {
     input_exe.addIncludePath("include");
     input_exe.addIncludePath("src");
     b.installArtifact(input_exe);
+
+    const tetris_exe = b.addExecutable(.{
+        .name = "notcurses-tetris",
+        .target = target,
+        .optimize = optimize,
+    });
+    tetris_exe.linkLibCpp();
+    tetris_exe.linkLibrary(lib);
+    tetris_exe.linkLibrary(libcpp);
+    tetris_exe.linkLibrary(gpm_dep.artifact("gpm"));
+    tetris_exe.linkLibrary(libdeflate_dep.artifact("deflate"));
+    tetris_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
+    tetris_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
+    tetris_exe.addCSourceFile("src/tetris/main.cpp", &cppflags);
+    tetris_exe.addConfigHeader(version_header);
+    tetris_exe.addConfigHeader(builddef_header);
+    tetris_exe.addIncludePath("include");
+    tetris_exe.addIncludePath("src");
+    b.installArtifact(tetris_exe);
+
+    const fetch_exe = b.addExecutable(.{
+        .name = "notcurses-fetch",
+        .target = target,
+        .optimize = optimize,
+    });
+    fetch_exe.linkLibCpp();
+    fetch_exe.linkLibrary(lib);
+    fetch_exe.linkLibrary(gpm_dep.artifact("gpm"));
+    fetch_exe.linkLibrary(libdeflate_dep.artifact("deflate"));
+    fetch_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
+    fetch_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
+    fetch_exe.addCSourceFile("src/fetch/main.c", &cflags);
+    fetch_exe.addCSourceFile("src/fetch/ncart.c", &cflags);
+    fetch_exe.addConfigHeader(version_header);
+    fetch_exe.addConfigHeader(builddef_header);
+    fetch_exe.addIncludePath("include");
+    fetch_exe.addIncludePath("src");
+    b.installArtifact(fetch_exe);
 }
 
 fn addCSourceDir(self: *std.build.CompileStep, b: *std.build.Builder, dir_path: []const u8, flags: []const []const u8) void {

@@ -19,5 +19,9 @@
             .url = "https://github.com/neurocyte/ncurses-zig/archive/28ed5c804b4c1f37b10de4966a6f082c513d8aa3.tar.gz",
             .hash = "1220e9e70b09572dfe5da987c6247bbc3b691be50a599caa37986d5694c0c0b068a7",
         },
+        .ffmpeg = .{
+            .url = "https://github.com/andrewrk/ffmpeg/archive/3ed831f2ff78252d51685a7cd07782020e09fb24.tar.gz",
+            .hash = "1220a5f11188b28c024e4711d8a67a580d61e5e78b81bbb5bdac566db86ea4bbaedf",
+        },
     },
 }
