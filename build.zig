@@ -204,7 +204,7 @@ fn addCSourceDir(self: *std.build.CompileStep, b: *std.build.Builder, dir_path: 
     var iter = lib_Dir.iterate();
 
     while (iter.next() catch unreachable) |entry| {
-        if (entry.kind == .File) {
+        if (entry.kind == .file) {
             const ext = std.fs.path.extension(entry.name);
             if (std.mem.eql(u8, ext, ".c") or std.mem.eql(u8, ext, ".cc")) {
                 const path = std.fs.path.join(b.allocator, &.{ dir_path, entry.name }) catch unreachable;
