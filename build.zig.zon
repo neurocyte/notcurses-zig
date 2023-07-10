@@ -16,9 +16,9 @@
             .hash = "12204ea04f14417f36a55302526da566dfcbdac08d8a61e569ee0211b09808e353b8",
         },
         .ncurses = .{
-            .url = "https://github.com/neurocyte/ncurses-zig/archive/28ed5c804b4c1f37b10de4966a6f082c513d8aa3.tar.gz",
-            .hash = "1220e9e70b09572dfe5da987c6247bbc3b691be50a599caa37986d5694c0c0b068a7",
-        },
+            .url = "https://github.com/neurocyte/ncurses-zig/archive/c8e5f7eb5fa6e50c28850bac0213c634d33fe0e0.tar.gz",
+            .hash = "1220218116d77db5c21082d8f017b505e7906dce27b23d57532f882e816060ce5130",
+         },
         .ffmpeg = .{
             .url = "https://github.com/andrewrk/ffmpeg/archive/f794541f05c875c91a746ccb8c906d60b538ae0f.tar.gz",
             .hash = "12201e39829ef796f49dc81711ec6f22e591638e2af60baf8be698ea8d5bb1caa29e",
