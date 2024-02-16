@@ -29,6 +29,8 @@
         },
     },
     .paths = .{
+        "include",
+        "src",
         "build.zig",
         "build.zig.zon",
     },
