@@ -550,6 +550,20 @@ pub const Plane = struct {
         _ = c.ncplane_base(self.n, cell);
     }
 
+    /// Set the ncplane's foreground palette index, set the foreground palette index
+    /// bit, set it foreground-opaque, and clear the foreground default color bit.
+    pub fn set_fg_palindex(self: Self, idx: c_uint) !void {
+        const err = c.ncplane_set_fg_palindex(self.n, idx);
+        if (err != 0) return error.NCSetPalIndexFailed;
+    }
+
+    /// Set the ncplane's background palette index, set the background palette index
+    /// bit, set it background-opaque, and clear the background default color bit.
+    pub fn set_bg_palindex(self: Self, idx: c_uint) !void {
+        const err = c.ncplane_set_bg_palindex(self.n, idx);
+        if (err != 0) return error.NCSetPalIndexFailed;
+    }
+
     /// Set the current foreground color using RGB specifications. If the
     /// terminal does not support directly-specified 3x8b cells (24-bit "TrueColor",
     /// indicated by the "RGB" terminfo capability), the provided values will be
