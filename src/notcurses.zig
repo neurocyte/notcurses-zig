@@ -592,6 +592,12 @@ pub const Plane = struct {
         if (err != 0) return error.NCSetAlphaFailed;
     }
 
+    /// Set the alpha and coloring bits of the plane's current channels from a
+    /// 64-bit pair of channels.
+    pub fn set_channels(self: Self, channels_: u64) void {
+        c.ncplane_set_channels(self.n, channels_);
+    }
+
     /// Move this plane relative to the standard plane, or the plane to which it is
     /// bound (if it is bound to a plane). It is an error to attempt to move the
     /// standard plane.
