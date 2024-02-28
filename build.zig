@@ -168,6 +168,8 @@ pub fn build(b: *std.Build) void {
 
     const mod = b.addModule("notcurses", .{
         .root_source_file = .{ .path = "src/notcurses.zig" },
+        .target = target,
+        .optimize = optimize,
     });
     if (use_system_notcurses) {
         mod.linkSystemLibrary("notcurses", .{});
@@ -175,6 +177,21 @@ pub fn build(b: *std.Build) void {
         mod.linkSystemLibrary("avdevice", .{});
         mod.linkSystemLibrary("avutil", .{});
         mod.linkSystemLibrary("avformat", .{});
+
+        const wrappers = b.addStaticLibrary(.{
+            .name = "wrappers",
+            .target = target,
+            .optimize = optimize,
+        });
+        wrappers.addIncludePath(.{ .path = "include" });
+        wrappers.addCSourceFiles(.{
+            .files = &[_][]const u8{
+                "src/wrappers.c",
+            },
+            .flags = cflags,
+        });
+        wrappers.linkLibC();
+        mod.linkLibrary(wrappers);
     } else {
         mod.linkLibrary(lib);
     }
