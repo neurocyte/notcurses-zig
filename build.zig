@@ -105,51 +105,51 @@ pub fn build(b: *std.Build) void {
     lib.addIncludePath(.{ .path = notcurses_dep.path("include").getPath(b) });
     lib.addIncludePath(.{ .path = notcurses_dep.path("src").getPath(b) });
     lib.addCSourceFiles(.{
-        .dependency = notcurses_dep,
+        .root = notcurses_dep.path("src"),
         .files = &[_][]const u8{
-            "src/lib/automaton.c",
-            "src/lib/banner.c",
-            "src/lib/blit.c",
-            "src/lib/debug.c",
-            "src/lib/direct.c",
-            "src/lib/fade.c",
-            "src/lib/fd.c",
-            "src/lib/fill.c",
-            "src/lib/gpm.c",
-            "src/lib/in.c",
-            "src/lib/kitty.c",
-            "src/lib/layout.c",
-            "src/lib/linux.c",
-            "src/lib/menu.c",
-            "src/lib/metric.c",
-            "src/lib/mice.c",
-            "src/lib/notcurses.c",
-            "src/lib/plot.c",
-            "src/lib/progbar.c",
-            "src/lib/reader.c",
-            "src/lib/reel.c",
-            "src/lib/render.c",
-            "src/lib/selector.c",
-            "src/lib/sixel.c",
-            "src/lib/sprite.c",
-            "src/lib/stats.c",
-            "src/lib/tabbed.c",
-            "src/lib/termdesc.c",
-            "src/lib/tree.c",
-            "src/lib/unixsig.c",
-            "src/lib/util.c",
-            "src/lib/visual.c",
-            "src/lib/windows.c",
-            "src/compat/compat.c",
-            "src/media/shim.c",
-            "src/media/none.c",
+            "lib/automaton.c",
+            "lib/banner.c",
+            "lib/blit.c",
+            "lib/debug.c",
+            "lib/direct.c",
+            "lib/fade.c",
+            "lib/fd.c",
+            "lib/fill.c",
+            "lib/gpm.c",
+            "lib/in.c",
+            "lib/kitty.c",
+            "lib/layout.c",
+            "lib/linux.c",
+            "lib/menu.c",
+            "lib/metric.c",
+            "lib/mice.c",
+            "lib/notcurses.c",
+            "lib/plot.c",
+            "lib/progbar.c",
+            "lib/reader.c",
+            "lib/reel.c",
+            "lib/render.c",
+            "lib/selector.c",
+            "lib/sixel.c",
+            "lib/sprite.c",
+            "lib/stats.c",
+            "lib/tabbed.c",
+            "lib/termdesc.c",
+            "lib/tree.c",
+            "lib/unixsig.c",
+            "lib/util.c",
+            "lib/visual.c",
+            "lib/windows.c",
+            "compat/compat.c",
+            "media/shim.c",
+            "media/none.c",
         },
         .flags = cflags,
     });
     if (enable_ffmpeg) lib.addCSourceFiles(.{
-        .dependency = notcurses_dep,
+        .root = notcurses_dep.path("src"),
         .files = &[_][]const u8{
-            "src/media/ffmpeg.c",
+            "media/ffmpeg.c",
         },
         .flags = cflags,
     });
@@ -208,20 +208,20 @@ pub fn build(b: *std.Build) void {
     libcpp.addIncludePath(.{ .path = notcurses_dep.path("include").getPath(b) });
     libcpp.addIncludePath(.{ .path = notcurses_dep.path("src").getPath(b) });
     libcpp.addCSourceFiles(.{
-        .dependency = notcurses_dep,
+        .root = notcurses_dep.path("src/libcpp"),
         .files = &[_][]const u8{
-            "src/libcpp/FDPlane.cc",
-            "src/libcpp/Menu.cc",
-            "src/libcpp/MultiSelector.cc",
-            "src/libcpp/NotCurses.cc",
-            "src/libcpp/Plane.cc",
-            "src/libcpp/Plot.cc",
-            "src/libcpp/Reel.cc",
-            "src/libcpp/Root.cc",
-            "src/libcpp/Selector.cc",
-            "src/libcpp/Subproc.cc",
-            "src/libcpp/Tablet.cc",
-            "src/libcpp/Utilities.cc",
+            "FDPlane.cc",
+            "Menu.cc",
+            "MultiSelector.cc",
+            "NotCurses.cc",
+            "Plane.cc",
+            "Plot.cc",
+            "Reel.cc",
+            "Root.cc",
+            "Selector.cc",
+            "Subproc.cc",
+            "Tablet.cc",
+            "Utilities.cc",
         },
         .flags = cflags,
     });
@@ -240,8 +240,8 @@ pub fn build(b: *std.Build) void {
     info_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
     info_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
     info_exe.addCSourceFiles(.{
-        .dependency = notcurses_dep,
-        .files = &[_][]const u8{"src/info/main.c"},
+        .root = notcurses_dep.path("src/info"),
+        .files = &[_][]const u8{"main.c"},
         .flags = cflags,
     });
     info_exe.addConfigHeader(version_header);
@@ -263,8 +263,8 @@ pub fn build(b: *std.Build) void {
     input_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
     input_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
     input_exe.addCSourceFiles(.{
-        .dependency = notcurses_dep,
-        .files = &[_][]const u8{"src/input/input.cpp"},
+        .root = notcurses_dep.path("src/input"),
+        .files = &[_][]const u8{"input.cpp"},
         .flags = &cppflags,
     });
     input_exe.addConfigHeader(version_header);
@@ -286,8 +286,8 @@ pub fn build(b: *std.Build) void {
     tetris_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
     tetris_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
     tetris_exe.addCSourceFiles(.{
-        .dependency = notcurses_dep,
-        .files = &[_][]const u8{"src/tetris/main.cpp"},
+        .root = notcurses_dep.path("src/tetris"),
+        .files = &[_][]const u8{"main.cpp"},
         .flags = &cppflags,
     });
     tetris_exe.addConfigHeader(version_header);
@@ -308,10 +308,10 @@ pub fn build(b: *std.Build) void {
     fetch_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
     fetch_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
     fetch_exe.addCSourceFiles(.{
-        .dependency = notcurses_dep,
+        .root = notcurses_dep.path("src/fetch"),
         .files = &[_][]const u8{
-            "src/fetch/main.c",
-            "src/fetch/ncart.c",
+            "main.c",
+            "ncart.c",
         },
         .flags = cflags,
     });
@@ -335,8 +335,8 @@ pub fn build(b: *std.Build) void {
         player_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
         player_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
         player_exe.addCSourceFiles(.{
-            .dependency = notcurses_dep,
-            .files = &[_][]const u8{"src/player/play.cpp"},
+            .root = notcurses_dep.path("src/player"),
+            .files = &[_][]const u8{"play.cpp"},
             .flags = &cppflags,
         });
         player_exe.addConfigHeader(version_header);
@@ -358,8 +358,8 @@ pub fn build(b: *std.Build) void {
         ls_exe.linkLibrary(ncurses_dep.artifact("ncurses"));
         ls_exe.linkLibrary(libunistring_dep.artifact("libunistring"));
         ls_exe.addCSourceFiles(.{
-            .dependency = notcurses_dep,
-            .files = &[_][]const u8{"src/ls/main.cpp"},
+            .root = notcurses_dep.path("src/ls"),
+            .files = &[_][]const u8{"main.cpp"},
             .flags = &cppflags,
         });
         ls_exe.addConfigHeader(version_header);
