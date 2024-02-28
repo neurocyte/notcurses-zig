@@ -177,6 +177,7 @@ pub fn build(b: *std.Build) void {
         mod.linkSystemLibrary("avdevice", .{});
         mod.linkSystemLibrary("avutil", .{});
         mod.linkSystemLibrary("avformat", .{});
+        mod.linkSystemLibrary("unistring", .{});
 
         const wrappers = b.addStaticLibrary(.{
             .name = "wrappers",

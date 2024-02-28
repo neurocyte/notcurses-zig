@@ -1347,7 +1347,7 @@ pub fn ncegc_len(egcs: []const u8, colcount: *c_int) !usize {
         return error.Overflow;
     @memcpy(buf[0..egcs.len], egcs);
     buf[egcs.len] = 0;
-    const ret = c.ncegc_len(buf.ptr, colcount);
+    const ret = c.utf8_egc_len(buf.ptr, colcount);
     return if (ret < 0) error.InvalidChar else @intCast(ret);
 }
 
