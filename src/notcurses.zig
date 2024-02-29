@@ -254,7 +254,7 @@ pub const Plane = struct {
     /// must both be positive. This plane is initially at the top of the z-buffer,
     /// as if ncplane_move_top() had been called on it. The void* 'userptr' can be
     /// retrieved (and reset) later. A 'name' can be set, used in debugging.
-    pub fn init(nopts: [*c]const Options, parent_: Self) !Self {
+    pub fn init(nopts: *const Options, parent_: Self) !Self {
         const child = c.ncplane_create(parent_.n, nopts);
         return if (child) |p| .{ .n = p } else error.OutOfMemory;
     }
@@ -539,7 +539,7 @@ pub const Plane = struct {
     /// rendering anywhere that the ncplane's gcluster is 0. Note that the base cell
     /// is not affected by ncplane_erase(). 'c' must not be a secondary cell from a
     /// multicolumn EGC.
-    pub fn set_base(self: Self, egc: [*c]const u8, stylemask: u16, channels_: u64) !isize {
+    pub fn set_base(self: Self, egc: [*:0]const u8, stylemask: u16, channels_: u64) !isize {
         const bytes_copied = c.ncplane_set_base(self.n, egc, stylemask, channels_);
         return if (bytes_copied < 0) error.NCSetBaseFailed else @intCast(bytes_copied);
     }
@@ -624,13 +624,13 @@ pub const Plane = struct {
     /// They will be interpreted as a series of columns (according to the definition
     /// of ncplane_putc()). Advances the cursor by some positive number of columns
     /// (though not beyond the end of the plane); this number is returned on success.
-    pub fn putstr(self: Self, gclustarr: [*c]const u8) !usize {
+    pub fn putstr(self: Self, gclustarr: [*:0]const u8) !usize {
         const ret = c__ncplane_putstr(self.n, gclustarr);
         return if (ret < 0) error.NCPlanePutStrFailed else @intCast(ret);
     }
 
     /// Write an aligned series of EGCs to the current location, using the current style.
-    pub fn putstr_aligned(self: Self, y_: c_int, align_: Align, s: [*c]const u8) !usize {
+    pub fn putstr_aligned(self: Self, y_: c_int, align_: Align, s: [*:0]const u8) !usize {
         const ret = c__ncplane_putstr_aligned(self.n, y_, @intFromEnum(align_), s);
         return if (ret < 0) error.NCPlanePutStrFailed else @intCast(ret);
     }
@@ -785,7 +785,7 @@ pub const Plane = struct {
     /// Breaks the UTF-8 string in 'gcluster' down, setting up the nccell 'c'.
     /// Returns the number of bytes copied out of 'gcluster', or -1 on failure. The
     /// styling of the cell is left untouched, but any resources are released.
-    pub fn cell_load(self: Self, cell: *Cell, gcluster: [*c]const u8) !usize {
+    pub fn cell_load(self: Self, cell: *Cell, gcluster: [:0]const u8) !usize {
         const ret = c.nccell_load(self.n, cell, gcluster);
         return if (ret < 0) error.NCCellLoadFailed else @intCast(ret);
     }
@@ -795,22 +795,22 @@ pub const EXIT_SUCCESS = c.EXIT_SUCCESS;
 pub const EXIT_FAILURE = c.EXIT_FAILURE;
 
 pub const CHANNELS_INITIALIZER = c.NCCHANNELS_INITIALIZER;
-pub fn channels_set_fg_rgb(arg_channels: [*c]u64, arg_rgb: c_uint) !void {
+pub fn channels_set_fg_rgb(arg_channels: *u64, arg_rgb: c_uint) !void {
     const err = c.ncchannels_set_fg_rgb(arg_channels, arg_rgb);
     if (err != 0)
         return error.NCInvalidRGBValue;
 }
-pub fn channels_set_bg_rgb(arg_channels: [*c]u64, arg_rgb: c_uint) !void {
+pub fn channels_set_bg_rgb(arg_channels: *u64, arg_rgb: c_uint) !void {
     const err = c.ncchannels_set_bg_rgb(arg_channels, arg_rgb);
     if (err != 0)
         return error.NCInvalidRGBValue;
 }
-pub fn channels_set_fg_alpha(arg_channels: [*c]u64, arg_alpha: c_uint) !void {
+pub fn channels_set_fg_alpha(arg_channels: *u64, arg_alpha: c_uint) !void {
     const err = c.ncchannels_set_fg_alpha(arg_channels, arg_alpha);
     if (err != 0)
         return error.NCInvalidAlphaValue;
 }
-pub fn channels_set_bg_alpha(arg_channels: [*c]u64, arg_alpha: c_uint) !void {
+pub fn channels_set_bg_alpha(arg_channels: *u64, arg_alpha: c_uint) !void {
     const err = c.ncchannels_set_bg_alpha(arg_channels, arg_alpha);
     if (err != 0)
         return error.NCInvalidAlphaValue;
@@ -857,7 +857,7 @@ pub const Menu = struct {
     ///  * left or right on an unrolled menu (navigates among sections)
     ///  * up or down on an unrolled menu (navigates among items)
     ///  * escape on an unrolled menu (the menu is rolled up)
-    pub fn offer_input(self: *Self, nc: [*c]const c.ncinput) bool {
+    pub fn offer_input(self: *Self, nc: *const c.ncinput) bool {
         return c.ncmenu_offer_input(self.n, nc);
     }
 
@@ -1393,7 +1393,7 @@ fn c__ncplane_putstr_yx(arg_n: ?*c.struct_ncplane, arg_y: c_int, arg_x: c_int, a
     }
     return ret;
 }
-fn c__ncplane_putstr(arg_n: ?*c.struct_ncplane, arg_gclustarr: [*c]const u8) callconv(.C) c_int {
+fn c__ncplane_putstr(arg_n: ?*c.struct_ncplane, arg_gclustarr: [*:0]const u8) callconv(.C) c_int {
     var n = arg_n;
     _ = &n;
     var gclustarr = arg_gclustarr;
