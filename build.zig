@@ -173,6 +173,8 @@ pub fn build(b: *std.Build) void {
     });
     if (use_system_notcurses) {
         mod.linkSystemLibrary("notcurses", .{});
+        if (lib.rootModuleTarget().os.tag == .macos)
+            mod.linkSystemLibrary("notcurses-core", .{});
         mod.linkSystemLibrary("avcodec", .{});
         mod.linkSystemLibrary("avdevice", .{});
         mod.linkSystemLibrary("avutil", .{});
