@@ -162,9 +162,9 @@ pub fn build(b: *std.Build) void {
     });
 
     b.installArtifact(lib);
-    lib.installConfigHeader(version_header, .{});
-    lib.installConfigHeader(builddef_header, .{});
-    lib.installHeadersDirectory(notcurses_dep.path("include/notcurses").getPath(b), "notcurses");
+    lib.installConfigHeader(version_header);
+    lib.installConfigHeader(builddef_header);
+    lib.installHeadersDirectory(.{ .path = notcurses_dep.path("include/notcurses").getPath(b) }, "notcurses", .{});
 
     const mod = b.addModule("notcurses", .{
         .root_source_file = .{ .path = "src/notcurses.zig" },
@@ -228,7 +228,7 @@ pub fn build(b: *std.Build) void {
         .flags = cflags,
     });
     b.installArtifact(libcpp);
-    libcpp.installHeadersDirectory(notcurses_dep.path("include/ncpp").getPath(b), "ncpp");
+    libcpp.installHeadersDirectory(.{ .path = notcurses_dep.path("include/ncpp").getPath(b) }, "ncpp", .{});
 
     const info_exe = b.addExecutable(.{
         .name = "notcurses-info",

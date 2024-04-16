@@ -8,24 +8,24 @@
             .hash = "1220c8101b67a8431e735b5431ddbc03ad455f7d37aeed0ee6294fda7c29ec168848",
         },
         .gpm = .{
-            .url = "https://github.com/neurocyte/gpm-zig/archive/a3721c986d7eb9df706d7c0cf79c8b3be911dafa.tar.gz",
-            .hash = "122029c026add54402c6182d6395e50d442d999179640821c757436e05e5cb500d86",
+            .url = "https://github.com/neurocyte/gpm-zig/archive/83c9013bf31ad6cde34889256687214cca06759a.tar.gz",
+            .hash = "1220f78de7693cd6c339dfb766ee82a975c8d3ae2c843c8ca3c8b2b38f442f6f4054",
         },
         .libdeflate = .{
-            .url = "https://github.com/neurocyte/libdeflate-zig/archive/7d9ef31b8a19e05b9af2c319e8e75c6a821dab54.tar.gz",
-            .hash = "122036d67650becf02ec136b2ccfffc8cbe49cdc4f4abd66a7dae35533996beb8f44",
+            .url = "https://github.com/neurocyte/libdeflate-zig/archive/03a3e8de186200c9df6ca8a2ea0a5754e6028dd8.tar.gz",
+            .hash = "12208fc009d1b8382dca9991ab993064fbec7116fa418cd130df4a6e53fbe19d5bac",
         },
         .libunistring = .{
-            .url = "https://github.com/neurocyte/libunistring-zig/archive/69e2b215440e7341d71a7b0d9861732fc276f4be.tar.gz",
-            .hash = "122071cc0b99ddb61c36f80e72a31f3ffcd417b4dc9971b7d34cb8f8ecd9a5f0f352",
+            .url = "https://github.com/neurocyte/libunistring-zig/archive/5116e80515290accaf1f90572450747001cb5fd4.tar.gz",
+            .hash = "12202241e0e3ec3c2a115407ea69e5055117c4f5186b616026e2008a319c4ac596a2",
         },
         .ncurses = .{
-            .url = "https://github.com/neurocyte/ncurses-zig/archive/a5b0648bbe812264dba4640882377e15b0ecd2c1.tar.gz",
-            .hash = "1220ab23ebd1f2e6293840d77ed70a43e20d54b3f101d552bdac5ea20e45602217a4",
+            .url = "https://github.com/neurocyte/ncurses-zig/archive/96273d44192ae4ff765562f876ae50151c1da928.tar.gz",
+            .hash = "12202635a796b1b96cab4b063b1d4cb6745527be6eb3d22bcaff35a37881780bc36b",
         },
         .ffmpeg = .{
-            .url = "https://github.com/andrewrk/ffmpeg/archive/1e6d0c945d4d6c6e2feab9720df12292b092d1be.tar.gz",
-            .hash = "1220c9efb7f1e554a922a2f4f151c07b56571a254713006924dea17361c7471ba320",
+            .url = "https://github.com/andrewrk/ffmpeg/archive/4a1cdff5ee438e016853b4803ac40c3f8f0c3f53.tar.gz",
+            .hash = "1220e83c39e5c912c0c908b92c72ef4ba972db65dfb6ca97f06249101c4afb1da697",
         },
     },
     .paths = .{
